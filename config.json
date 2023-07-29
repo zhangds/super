@@ -1,0 +1,14 @@
+{
+  "metadb":{
+		"name":"metadb","type":"mysql","url":"jdbc:mysql://127.0.0.1:3306/datago-rb","host":"127.0.0.1","port":3306,"db":"datago-rb","chartset":"utf8","user":"root","password":"Guest_checked"
+    },
+  "apiModes":[
+		{"className":"ApiCode","classPath":"module.apiCode.ApiCode"}
+	],
+  "appModels": [
+        {"appCode": "pdfCmp", "path": "/home/zhangds/download/htmlModel/diff2/",
+          "defaultHtml": ""},
+        {"appCode": "pdfCmp111", "path": "/home/zhangds/download/htmlModel/diff2/",
+          "defaultHtml": ""}
+  ]
+}
