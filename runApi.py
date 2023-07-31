@@ -52,7 +52,7 @@ def dynamicLoad(uri):
                     # Linux目录，windows待验证
                     allPaths = absolutePath.split(os.sep)
                     return send_from_directory(os.sep.join(allPaths[:-1]), allPaths[-1])
-    return
+    return {}
 
 
 # @app.errorhandler(404)

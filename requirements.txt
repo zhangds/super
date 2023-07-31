@@ -4,3 +4,5 @@ requests==2.31.0
 pymysql==1.1.0
 setuptools==57.5.0
 demjson==2.2.4
+pycryptodome==3.18.0
+uuid==1.30

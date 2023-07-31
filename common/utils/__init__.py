@@ -9,3 +9,6 @@ from .logger import make_dir, initLoger
 from .MetaDB import MetaDB
 from .R import R
 from .comFun import *
+from .httpUtils import HttpUtils
+from .EmailUtils import EmailUtils
+from .aesHelper import sha256Helper, aseHelper

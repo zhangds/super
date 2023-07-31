@@ -199,7 +199,7 @@ def apiDelete():
         result = apiCodeControler.deleteApiData(apiCode, records, apiInfo)
 
     except Exception as e :
-        result = {"status" : "error", "message" : e.args[0]}
+        result = {"status": "error", "message": e.args[0]}
     return result
 
 
@@ -255,7 +255,7 @@ def getRequestValue(req, key) :
     result = None
     if req and key :
         result = req.values.get(key, "")
-        result = req.form.get(key) if result is "" and req.form.get(key) else result
+        result = req.form.get(key) if result == "" and req.form.get(key) else result
     return result
 
 
