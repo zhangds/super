@@ -83,17 +83,20 @@ class sysUserController(object) :
     def forget(self, userId, configs, uri="") :
         try :
             if userId != "" and configs :
-                sql = "select count(1) as NUMS from sys_user where USER_ID = '%s'" % userId
-                count = self.metadb.queryForMap(sql)
-                if count and count.get('NUMS') > 0 :
-                    _pwd, _salt = sha256Helper().encrypt(configs.get('INIT_PWD'))
-                    _sql = "update sys_user set PASSWORD='%s',SALT='%s' where user_id='%s'" % (_pwd, _salt, userId)
-                    self.metadb.excuteSql(_sql)
-                    EmailUtils(configs.get('EMAIL_HOST'), configs.get('EMAIL_PORT'),
-                               configs.get('EMAIL_USER'), configs.get('EMAIL_PWD'),
-                               configs.get('EMAIL_SENDER')).sendEmail(['zhang198058@hotmail.com', 'zhangds@faithindata.com.cn'],
-                           "密码初始化", "网站:%s\n网址:%s\n用户id:%s\n密码初始化完成!初始密码为:%s" %
-                                                                      (configs.get('APP_NAME'), uri, userId, configs.get('INIT_PWD')))
+                sql = "select MAIL from sys_user where USER_ID = '%s'" % userId
+                user = self.metadb.queryForMap(sql)
+                if user and user.get('MAIL'):
+                    _mail = user.get('MAIL')
+                    _mail = aseHelper().decrypt(_mail) if _mail and _mail != "" else ""
+                    if _mail is not None and _mail != "":
+                        EmailUtils(configs.get('EMAIL_HOST'), configs.get('EMAIL_PORT'),
+                                   configs.get('EMAIL_USER'), configs.get('EMAIL_PWD'),
+                                   configs.get('EMAIL_SENDER')).sendEmail([_mail],
+                                                                          "密码初始化", "网站:%s\n网址:%s\n用户id:%s\n密码初始化完成!初始密码为:%s" %
+                                                                          (configs.get('APP_NAME'), uri, userId, configs.get('INIT_PWD')))
+                        _pwd, _salt = sha256Helper().encrypt(configs.get('INIT_PWD'))
+                        _sql = "update sys_user set PASSWORD='%s',SALT='%s' where user_id='%s'" % (_pwd, _salt, userId)
+                        self.metadb.excuteSql(_sql)
         except Exception as e:
             pass
         return {}

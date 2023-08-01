@@ -35,7 +35,6 @@ class EmailUtils(object):
 
 
 if __name__ == '__main__':
-    # SendMail()
     EmailUtils("smtp.qq.com", 465, "381717913@qq.com", "rqyvzufmdiwpcbai","381717913@qq.com")\
         .sendEmail(['zhang198058@hotmail.com', 'zhangds@faithindata.com.cn'],
                    "密码初始化", "Python Send Mail test!")
