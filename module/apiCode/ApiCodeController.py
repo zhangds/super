@@ -14,7 +14,7 @@ sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(
 from common.utils import Config, MetaDB
 
 
-class ApiCodeControler(object) :
+class ApiCodeController(object) :
     def __init__(self, fileName="", config= None) :
         if config is not None :
             self.config = config
@@ -160,7 +160,7 @@ class ApiCodeControler(object) :
 
 if __name__ == '__main__' :
     config = Config('/Users/wangqs/Documents/source/mlink-code/python/apiService/config.json')
-    apiCodeControler = ApiCodeControler('../../config.json', config)
+    apiCodeControler = ApiCodeController('../../config.json', config)
     apiCodeControler.queryApiData("sysUser", limit=-1, params={"limit" : -1})
     # apiInfo=apiCodeControler.getApiInfo('sysUser')
     # print(apiInfo)

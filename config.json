@@ -4,7 +4,8 @@
     },
   "apiModes":[
 		{"className":"ApiCode","classPath":"module.apiCode.ApiCode"},
-        {"className":"SysUser","classPath":"module.sysUser.sysUser"}
+        {"className":"SysUser","classPath":"module.sysUser.sysUser"},
+        {"className":"rdsApi","classPath":"module.rds.rds"}
 	],
   "appModels": [
         {"appCode": "pdfCmp", "path": "/home/zhangds/download/htmlModel/diff2/",

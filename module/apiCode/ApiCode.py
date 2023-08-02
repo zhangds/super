@@ -9,7 +9,7 @@ import json
 import sys
 import os
 from common.utils import R, Config, MetaDB
-from .ApiCodeControler import ApiCodeControler
+from .ApiCodeController import ApiCodeController
 
 # 注册蓝图
 ApiCode = Blueprint('ApiCode', __name__, url_prefix='/dataService')
@@ -46,7 +46,7 @@ def getApiConfig(appConfig, appId, apiCode):
                     raise Exception("读取文件失败!filePath:%s--msg:%s" % (os.path.join(realPath, fileName[0]), e.args[0]))
     try :
         if content is None:
-            info = ApiCodeControler("", appConfig).getApiInfo(apiCode)
+            info = ApiCodeController("", appConfig).getApiInfo(apiCode)
             if info is None:
                 raise Exception('读取数据库配置未发现数据!apiCode:%s' % apiCode)
             content = json.dumps(info) if info and isinstance(info, dict) else ""
@@ -96,7 +96,7 @@ def sqlQuery():
         limit = request.values.get("limit", 50)
         start = request.values.get("start", 0)
         print("** start initSql=", initSql, ",start=", start, ",limit=", limit, file=sys.stderr)
-        apiCodeControler = ApiCodeControler("", appConfig)
+        apiCodeControler = ApiCodeController("", appConfig)
         result = apiCodeControler.querySqlData(initSql, start, limit)
     return result
 
@@ -127,7 +127,7 @@ def apiQuery():
         para_order = getRequestValue(request, "para_order")
 
         print("** start apiCode=", apiCode, ",start=", start, ",limit=", limit, ",params=", params, ",para_order=", para_order, file=sys.stderr)
-        apiCodeControler = ApiCodeControler("", appConfig)
+        apiCodeControler = ApiCodeController("", appConfig)
         result = apiCodeControler.queryApiData(apiCode, start, limit, params, para_order, apiInfo)
     except Exception as e:
         result = {"status": "error", "message": e.args[0]}
@@ -149,7 +149,7 @@ def apiUpdate():
         records = json.loads(recordStr)
         print("**apiCode=", apiCode, ",records=", records, file=sys.stderr)
 
-        apiCodeControler = ApiCodeControler("", appConfig)
+        apiCodeControler = ApiCodeController("", appConfig)
         result = apiCodeControler.updateApiData(apiCode, records, apiInfo)
 
     except Exception as e :
@@ -172,7 +172,7 @@ def apiInsert():
         records = json.loads(recordStr)
         print("**apiCode=", apiCode, ",records=", records, file=sys.stderr)
 
-        apiCodeControler = ApiCodeControler("", appConfig)
+        apiCodeControler = ApiCodeController("", appConfig)
         result = apiCodeControler.insertApiData(apiCode, records, apiInfo)
 
     except Exception as e :
@@ -195,7 +195,7 @@ def apiDelete():
         records = json.loads(recordStr)
         print("**apiCode=", apiCode, ",records=", records, file=sys.stderr)
 
-        apiCodeControler = ApiCodeControler("", appConfig)
+        apiCodeControler = ApiCodeController("", appConfig)
         result = apiCodeControler.deleteApiData(apiCode, records, apiInfo)
 
     except Exception as e :
@@ -306,7 +306,7 @@ def apicode() :
         limit = request.values.get("limit", 50)
         start = request.values.get("start", 0)
         print("** start initSql=", initSql, ",start=", start, ",limit=", limit, file=sys.stderr)
-        apiCodeControler = ApiCodeControler("", app.config['config'])
+        apiCodeControler = ApiCodeController("", app.config['config'])
         result = apiCodeControler.querySqlData(initSql, start, limit)
         pass
     elif command == "init" or command == "query" :
@@ -334,7 +334,7 @@ def apicode() :
         start = request.values.get("start", 0)
         para_order = request.values.get("para_order", "")
         print("** start apiCode=", apiCode, ",start=", start, ",limit=", limit, ",params=", params, ",para_order=", para_order, file=sys.stderr)
-        apiCodeControler = ApiCodeControler("", app.config['config'])
+        apiCodeControler = ApiCodeController("", app.config['config'])
         result = apiCodeControler.queryApiData(apiCode, start, limit, params, para_order)
 
     elif command == "insert" :
@@ -342,21 +342,21 @@ def apicode() :
         records = json.loads(recordStr)
         print("**apiCode=", apiCode, ",command=", command, ",records=", records, file=sys.stderr)
 
-        apiCodeControler = ApiCodeControler("", app.config['config'])
+        apiCodeControler = ApiCodeController("", app.config['config'])
         result = apiCodeControler.insertApiData(apiCode, records)
     elif command == "delete" :
         recordStr = request.form.get("records")
         records = json.loads(recordStr)
         print("**apiCode=", apiCode, ",command=", command, ",records=", records, file=sys.stderr)
 
-        apiCodeControler = ApiCodeControler("", app.config['config'])
+        apiCodeControler = ApiCodeController("", app.config['config'])
         result = apiCodeControler.deleteApiData(apiCode, records)
     elif command == "update" :
         recordStr = request.form.get("records")
         records = json.loads(recordStr)
         print("**apiCode=", apiCode, ",command=", command, ",records=", records, file=sys.stderr)
 
-        apiCodeControler = ApiCodeControler("", app.config['config'])
+        apiCodeControler = ApiCodeController("", app.config['config'])
         result = apiCodeControler.updateApiData(apiCode, records)
     else :
         result = {"staus" : "error", "message" : "未知命令command:%s" % command}
