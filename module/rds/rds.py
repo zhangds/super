@@ -19,6 +19,6 @@ def export2File():
     userId = HttpUtils.getRequestValue(request, "userId")
     tabId = HttpUtils.getRequestValue(request, "tabId")
     columns = HttpUtils.getRequestValue(request, "columns")
-    if userId != "" and tabId != "":
-        rdsController(appConfig).export2File(userId, tabId, columns)
+    rdsController(appConfig).export2File(userId, tabId, columns)
     return {}
+

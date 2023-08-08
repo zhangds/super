@@ -12,3 +12,4 @@ from .comFun import *
 from .httpUtils import HttpUtils
 from .EmailUtils import EmailUtils
 from .aesHelper import sha256Helper, aseHelper
+from .restfulUtils import httpRequestUtil
