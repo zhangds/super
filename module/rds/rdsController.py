@@ -7,6 +7,7 @@
 
 import sys, os
 from common.utils import aseHelper, httpRequestUtil
+from ftplib import FTP
 import demjson
 
 import json
@@ -30,8 +31,7 @@ class rdsController(object) :
 
     def export2File(self, userId, tabId, columns):
         _key, _tabName, _schema, _driver, _url, _user, _pwd = None, None, None, None, None, None, None
-        _columns = None
-        export_sql = None
+        _columns, export_sql, filePath = None, None, None
         if userId != "":
             # FIXME 获取加密key,存在问题，不同的算法需要不同的key
             _key = 'nF8vba92Tofkyr1sy9uUVw=='
@@ -46,6 +46,7 @@ class rdsController(object) :
                                                                 _result.get("DRIVER_CLASSNAME"), _result.get("URL"), \
                                                                 _result.get("USER_NAME"), _result.get("PASSWORD")
                 _pwd = aseHelper().decrypt(_pwd) if _pwd and _pwd != "" else ""
+                _url = _url if "serverTimezone" in _url else (_url + "&serverTimezone=UTC")
                 # print(_tabName, _schema, _driver, _url, _user, _pwd)
         if _key and _tabName and _schema and _driver and _url and _user and _pwd:
             if columns != "":
@@ -61,14 +62,14 @@ class rdsController(object) :
                                 k.get('COL_NAME') != "" and k.get('ENCY_TYPE1') and \
                                 k.get('ENCY_TYPE1') != ""]
                 # print(",".join(columnResult))
-                export_sql = "select %s form %s.%s" % (",".join(columnResult), _schema, _tabName)
+                export_sql = "select %s from %s.%s" % (",".join(columnResult), _schema, _tabName)
                 if export_sql:
                     data = {
                         "operateType" : 1,
                         "jobName" : "encrypt_query_test1",
                         "jdbcSourceConfig" : [{
-                            # "jdbcUrl" : _url,
-                            "jdbcUrl" : "jdbc:mysql://192.168.3.198:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
+                            "jdbcUrl" : _url,
+                            # "jdbcUrl" : "jdbc:mysql://192.168.3.198:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
                             "username" : _user,
                             "password" : _pwd,
                             "table" : "%s.%s" % (_schema, _tabName)
@@ -77,12 +78,21 @@ class rdsController(object) :
                         "output" : "/data/rds/encrypt/staff",
                         "sql" : export_sql
                     }
-                    print(data)
-                    res = httpRequestUtil("http://127.0.0.1:10001/spark/exec/sql").doAction("POST", json=data)
+                    print(json.dumps(data))
+                    res = httpRequestUtil("http://127.0.0.1:10001/spark/exec/sql").doAction("POST", headers = {"Content-Type": "application/json"}, json=data)
                     if res and res.status_code == 200:
                         print(res.text)
+                        res = json.loads(res.text)
+                        if res.get("code") == 200:
+                            filePath = res.get("data")
+        if filePath:
+            print(filePath)
+            ftp = FTP()
+            ftp.connect('127.0.0.1', 21)
+            ftp.login('admin', '123456')
 
+            with open("/home/zhangds/download/Mydata/rds/encrypt/staff/staff.csv", 'rb') as fp :
+                ftp.storbinary('STOR staff.csv', fp)
 
-
-
+            ftp.quit()
         pass

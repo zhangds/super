@@ -10,12 +10,6 @@ import json
 
 class httpRequestUtil(object):
     def __init__(self, uri):
-        """
-        data={'key1':'value1','key2':'value2'}
-        json=<josnStr>
-        ----
-        headers = {"User-Agent":"test request headers"}
-        """
         self.uri = uri
         # self.type = type
         # for _key in kwargs.keys() :
@@ -23,26 +17,42 @@ class httpRequestUtil(object):
         #         setattr(self, _key, kwargs[_key])
 
     def doAction(self, type= "POST", **kwargs):
+        """
+            **kwargs::::
+            data={'key1':'value1','key2':'value2'}
+            json=<josnStr>
+            ----
+            headers = {"User-Agent":"test request headers"}
+        """
         if type and type.upper() == "POST":
             return requests.post(self.uri, **kwargs)
         return {}
 
 
-url = "http://127.0.0.1:10001/spark/exec/sql"
-data = {
-  "operateType": 1,
-  "jobName" : "encrypt_query_test1",
-  "jdbcSourceConfig" : [{
-    "jdbcUrl" : "jdbc:mysql://192.168.3.198:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
-    "username" : "root",
-    "password" : "Datago@123",
-    "table" : "test.staff"
-  }],
-  "filename" : "staff.csv",
-  "output" : "/data/rds/encrypt/staff",
-  "sql" : "select det(id,'nF8vba92Tofkyr1sy9uUVw==') as id ,det(phone,'nF8vba92Tofkyr1sy9uUVw==') as phone, det(edu,'nF8vba92Tofkyr1sy9uUVw==') as edu, ope(salary,'32,64') as salary, hom(salary,'xxxx') as salary1  from staff"
-}
-httpRequestUtil(url).doAction("post", json=data)
+# url = "http://127.0.0.1:10001/spark/exec/sql"
+# data = {
+#   "operateType": 1,
+#   "jobName" : "encrypt_query_test1",
+#   "jdbcSourceConfig" : [{
+#     "jdbcUrl" : "jdbc:mysql://192.168.3.198:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
+#     "username" : "root",
+#     "password" : "Datago@123",
+#     "table" : "test.staff"
+#   }],
+#   "filename" : "staff.csv",
+#   "output" : "/data/rds/encrypt/staff",
+#   "sql" : "select det(id,'nF8vba92Tofkyr1sy9uUVw==') as id ,det(phone,'nF8vba92Tofkyr1sy9uUVw==') as phone, det(edu,'nF8vba92Tofkyr1sy9uUVw==') as edu, ope(salary,'32,64') as salary, hom(salary,'xxxx') as salary1  from staff"
+# }
+# data = {"operateType": 1, "jobName": "encrypt_query_test1",
+#         "jdbcSourceConfig": [{
+#             "jdbcUrl": "jdbc:mysql://192.168.3.198:3306/sensitive_db?characterEncoding=utf-8&useSSL=false&serverTimezone=UTC",
+#             "username": "root",
+#             "password": "Datago@123",
+#             "table": "TEST.STAFF"}],
+#         "filename": "staff.csv",
+#         "output": "/data/rds/encrypt/staff",
+#         "sql": "select det(id,'nF8vba92Tofkyr1sy9uUVw==') as id,det(phone,'nF8vba92Tofkyr1sy9uUVw==') as phone,det(edu,'nF8vba92Tofkyr1sy9uUVw==') as edu,ope(salary,'nF8vba92Tofkyr1sy9uUVw==') as salary from TEST.STAFF"}
+# resp = httpRequestUtil(url).doAction("post", json=data)
 # resp = requests.post(url,  json=data)
 # print(resp.text)
 # data = {
