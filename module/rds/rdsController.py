@@ -100,9 +100,7 @@ class rdsController(object) :
             except :
                 ftp.mkd(_tabName)
             with open(os.path.join(os.path.join(self.local_path, _tabName), "%s.csv" % _tabName), 'rb') as fp :
-                print('STOR %s/%s-%s.csv' % (_tabName, _tabName, datetime.datetime.now().strftime('%Y%m%d%H%M%S%s')[:-7]))
                 ftp.storbinary('STOR %s/%s-%s.csv' % (_tabName, _tabName, datetime.datetime.now().strftime('%Y%m%d%H%M%S%s')[:-7]), fp)
-                # ftp.storbinary('STOR %s' % ("%s/%s.csv" % (_tabName, _tabName)), fp)
 
             ftp.quit()
             ftp.close()
