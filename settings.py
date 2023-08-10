@@ -17,3 +17,6 @@ EMAIL_PWD = "rqyvzufmdiwpcbai"
 EMAIL_SENDER = "381717913@qq.com"
 
 INIT_PWD = 'Datago@2023'
+
+
+

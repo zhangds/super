@@ -28,6 +28,8 @@ class rdsController(object) :
             return
         else :
             self.metadb = MetaDB.instance(self.config)
+            self.vm_path = self.config.get("rdsModels").get("MW_DOCKER_BASH_PATH")
+            self.local_path = self.config.get("rdsModels").get("LOCAL_FILE_PATH")
 
     def export2File(self, userId, tabId, columns):
         _key, _tabName, _schema, _driver, _url, _user, _pwd = None, None, None, None, None, None, None
@@ -35,7 +37,7 @@ class rdsController(object) :
         if userId != "":
             # FIXME 获取加密key,存在问题，不同的算法需要不同的key
             _key = 'nF8vba92Tofkyr1sy9uUVw=='
-        if _key and tabId != "":
+        if _key and tabId != "" and self.vm_path and self.local_path:
             # 获取加密表的信息
             _result = self.metadb.queryForMap("select A.tab_id,a.tab_name,A.DB_NAME, \
                                               A.SCHEMA_NAME,b.DRIVER_CLASSNAME,b.URL,b.USER_NAME,b.PASSWORD \
@@ -74,8 +76,8 @@ class rdsController(object) :
                             "password" : _pwd,
                             "table" : "%s.%s" % (_schema, _tabName)
                         }],
-                        "filename" : "staff.csv",
-                        "output" : "/data/rds/encrypt/staff",
+                        "filename" : "%s.csv" % _tabName,
+                        "output" : os.path.join(self.vm_path, _tabName),
                         "sql" : export_sql
                     }
                     print(json.dumps(data))
@@ -90,9 +92,15 @@ class rdsController(object) :
             ftp = FTP()
             ftp.connect('127.0.0.1', 21)
             ftp.login('admin', '123456')
-
-            with open("/home/zhangds/download/Mydata/rds/encrypt/staff/staff.csv", 'rb') as fp :
-                ftp.storbinary('STOR staff.csv', fp)
+            dir_res = []
+            ftp.dir('.', dir_res.append)
+            try :
+                ftp.cwd(_tabName)
+            except :
+                ftp.mkd(_tabName)
+            with open(os.path.join(os.path.join(self.local_path, _tabName), "%s.csv" % _tabName), 'rb') as fp :
+                ftp.storbinary('STOR %s' % ("%s/%s.csv" % (_tabName, _tabName)), fp)
 
             ftp.quit()
+            ftp.close()
         pass
