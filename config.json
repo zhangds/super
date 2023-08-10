@@ -11,6 +11,8 @@
         {"appCode": "pdfCmp", "path": "/home/zhangds/download/htmlModel/diff2/",
           "defaultHtml": ""},
         {"appCode": "pdfCmp111", "path": "/home/zhangds/download/htmlModel/diff2/",
+          "defaultHtml": ""},
+        {"appCode": "sys", "path": "/home/zhangds/download/htmlModel/apps/sys/",
           "defaultHtml": ""}
   ],
   "rdsModels": {

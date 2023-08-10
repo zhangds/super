@@ -23,11 +23,15 @@ def findModule(appId) :
         objs = [one if one is not None and isinstance(one, dict) and \
                        one.get('appCode') is not None and one.get('appCode') == appId \
                     else None for one in app.config["APPS_CONFIG"].get('appModels')]
-        objs.remove(None)
-        if objs is not None and len(objs) == 1 :
-            _module = objs[0]
-            if _module is not None and _module.get("path") is not None :
-                return _module
+        # objs.remove(None)
+        if objs and len(objs) > 0 :
+            for one in objs:
+                if one and one.get("path")is not None :
+                    return one
+            #
+            # _module = objs[0]
+            # if _module is not None and _module.get("path") is not None :
+            #     return _module
     return None
 
 
