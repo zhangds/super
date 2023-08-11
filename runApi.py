@@ -3,6 +3,7 @@
 from flask import Flask, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 from common.utils.config import Config
+import logging
 import copy
 import json
 import os
@@ -16,6 +17,21 @@ app.config.from_pyfile('settings.py')
 
 print(app.config["APP_NAME"])
 app.config["APPS_CONFIG"] = Config("config.json")
+
+# 创建一个logger实例
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# 创建一个文件处理器
+handler = logging.FileHandler('app.log', encoding='UTF-8')
+handler.setLevel(logging.INFO)
+
+# 创建一个格式化器
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+# 将处理器添加到日志器中
+app.logger.addHandler(handler)
 
 
 def findModule(appId) :
@@ -37,7 +53,9 @@ def findModule(appId) :
 
 @app.route('/initApp')
 def initApp() :
+    app.logger.info('重新加载配置信息...start!')
     app.config["APPS_CONFIG"] = Config("config.json")
+    app.logger.info('重新加载配置信息完成...end!')
     return jsonify({'message': r"应用刷新成功!", "status": "ok"})
 
 
